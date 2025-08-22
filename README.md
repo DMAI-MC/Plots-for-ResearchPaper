@@ -1,6 +1,6 @@
 # 📊 Heatmap Visualizations for Model Evaluation
 
-This repository contains **heatmap visualizations** for analyzing Graph Neural Network (GNN) training runs on the **Cora** dataset using **GCN** (default configuration).  
+This repository contains **heatmap visualizations** for analyzing Graph Neural Network (GNN) training runs on multiple datasets using multiple model architectures. 
 
 Each plot has the same axes:  
 
