@@ -1,6 +1,14 @@
-# 📊 Heatmap Visualizations for Model Evaluation
+# 📊 Heatmap Visualizations for GNN Evaluation
 
-This repository contains **heatmap visualizations** for analyzing Graph Neural Network (GNN) training runs on multiple datasets using multiple model architectures. 
+This repository contains **heatmap visualizations** and **training curves** for analyzing Graph Neural Network (GNN) training runs.  
+The experiments include both **GCN (Graph Convolutional Networks)** and **GAT (Graph Attention Networks)**, and cover tasks in:
+
+- **Node Classification** (e.g., Cora dataset)  
+- **Graph Property Prediction** (e.g., molecular or structural datasets)  
+
+---
+
+## 📐 General Setup
 
 Each plot has the same axes:  
 
@@ -8,129 +16,156 @@ Each plot has the same axes:
 - **Y-axis (vertical):** Number of layers (model depth)  
 - **Heatmap colors and cell values:** Metric of interest (varies by plot)  
 
-These plots together provide insights into model generalization, training dynamics, and over-smoothing behavior.  
+The plots together provide insights into **generalization**, **training dynamics**, and **over-smoothing** across model depth and width configurations.
 
 ---
 
 ## 🔑 Heatmaps and Their Meaning
 
 ### 1. Best Test Accuracy  
-**File:** `best_test_accuracy_heatmap.png`  
-Shows the **best test accuracy** achieved during training (early stopping).  
-This is the primary metric to evaluate model generalization.  
+**File:** `examples/best_test_accuracy_heatmap.png`  
+Shows the **best test accuracy** achieved during training (with early stopping).  
+This is the primary metric to evaluate model generalization for both node and graph-level tasks.  
 
-![Best Test Accuracy](best_test_accuracy_heatmap.png)
+![Best Test Accuracy](examples/best_test_accuracy_heatmap.png)
 
 ---
 
 ### 2. Optimal Epochs for Best Test Accuracy  
-**File:** `optimal_epochs_heatmap.png`  
+**File:** `examples/optimal_epochs_heatmap.png`  
 Indicates at which **epoch** the best test accuracy occurred.  
-Useful for understanding training speed and convergence stability.  
+Helps analyze convergence stability and speed.  
 
-![Optimal Epochs](optimal_epochs_heatmap.png)
+![Optimal Epochs](examples/optimal_epochs_heatmap.png)
 
 ---
 
 ### 3. Final Test Accuracy  
-**File:** `final_test_accuracy_heatmap.png`  
-Reports the **test accuracy at the last epoch (4000)**.  
-This helps compare whether models maintain performance long-term or rely on early stopping.  
+**File:** `examples/final_test_accuracy_heatmap.png`  
+Reports the **test accuracy at the final epoch (4000)**.  
+Useful for comparing whether models maintain performance long-term or rely on early stopping.  
 
-![Final Test Accuracy](final_test_accuracy_heatmap.png)
+![Final Test Accuracy](examples/final_test_accuracy_heatmap.png)
 
 ---
 
 ### 4. Perfect Train Accuracy (Interpolation Point)  
-**File:** `perfect_train_accuracy_heatmap.png`  
-Shows the **first epoch when the training accuracy reaches 1.0 and stays there until the final epoch (4000)**.  
+**File:** `examples/perfect_train_accuracy_heatmap.png`  
+Shows the **first epoch when the training accuracy reaches 1.0 and stays there until the last epoch (4000)**.  
 
 - Represents the point of **interpolation**.  
 - Disconnections are **not considered interpolation**.  
-- If the model never reached perfect accuracy, the cell is left empty.  
+- If a model never reached perfect accuracy, the cell remains empty.  
 
-![Perfect Train Accuracy](perfect_train_accuracy_heatmap.png)
+![Perfect Train Accuracy](examples/perfect_train_accuracy_heatmap.png)
 
 ---
 
 ### 5. Disconnection Analysis (Train Accuracy After Perfect Fit)  
-**File:** `disconnection_analysis_heatmap.png`  
+**File:** `examples/disconnection_analysis_heatmap.png`  
 Reports the **average train accuracy after the model first reached perfect accuracy**.  
 
-- If accuracy drops later, this heatmap reflects instability and potential disconnections.  
-- A stable value close to 1.0 means the model kept interpolation.  
+- If accuracy drops later, the heatmap reflects instability and potential disconnections.  
+- Stable values close to 1.0 mean the model kept interpolation.  
 
-![Disconnection Analysis](disconnection_analysis_heatmap.png)
+![Disconnection Analysis](examples/disconnection_analysis_heatmap.png)
 
 ---
 
 ### 6. MAD Value at Final Epoch  
-**File:** `mad_value_final_epoch_heatmap.png`  
+**File:** `examples/mad_value_final_epoch_heatmap.png`  
 Shows **Mean Average Distance (MAD)** at the last epoch (4000), a **local oversmoothing measure**.  
 
-- **Lower MAD values** → stronger information mixing between neighbors (potentially good).  
-- Should be compared with MAD Gap to judge if this is beneficial or harmful.  
+- **Lower MAD values** → stronger local neighbor information mixing (potentially good).  
+- Should be compared with MAD Gap for global interpretation.  
 
-![MAD Value](mad_value_final_epoch_heatmap.png)
+![MAD Value](examples/mad_value_final_epoch_heatmap.png)
 
 ---
 
 ### 7. MAD Gap at Final Epoch  
-**File:** `mad_gap_final_epoch_heatmap.png`  
-Shows **MAD Gap values** at the final epoch (4000), a **global oversmoothing measure**.  
+**File:** `examples/mad_gap_final_epoch_heatmap.png`  
+Shows **MAD Gap values** at the last epoch (4000), a **global oversmoothing measure**.  
 
-- **Higher MAD Gap values** → less oversmoothing across the entire graph (good).  
-- Helps contextualize MAD Value results.  
+- **Higher MAD Gap values** → less oversmoothing across the graph (good).  
+- Complements MAD Value analysis.  
 
-![MAD Gap](mad_gap_final_epoch_heatmap.png)
+![MAD Gap](examples/mad_gap_final_epoch_heatmap.png)
 
 ---
 
-## 🧩 Interpreting the Heatmaps Together
+## 📈 Training Curve Plots (2D)
+
+In addition to the heatmaps, **2D training accuracy curves** are included for both **node classification** and **graph property prediction** experiments.  
+
+For each trained **hidden_channels** setting:  
+1. A **train/test plot** is provided for each number of layers.  
+2. A **train-only plot** is provided showing all trained layers together.  
+
+This makes it possible to track how train/test accuracy evolves over 4000 epochs.  
+
+---
+
+### Example: Hidden Channels = 4
+- **Train vs Test Accuracy (per layer)**  
+  ![Train vs Test (HC=4, Layers=6)](examples/train_test_hidden_channels_4_epochs_accuracy_6.png)
+
+- **Training Accuracy across all layers**  
+  ![Train (HC=4, all layers)](examples/train_hidden_channels_4_epochs_accuracy_4.png)
+
+---
+
+### Example: Hidden Channels = 512
+- **Train vs Test Accuracy (per layer)**  
+  ![Train vs Test (HC=512, all layers)](examples/train_test_hidden_channels_512_epochs_accuracy.png)
+
+- **Training Accuracy across all layers**  
+  ![Train (HC=512, all layers)](examples/train_hidden_channels_512_epochs_accuracy.png)
+
+---
+
+## 🧩 Interpreting the Heatmaps and Curves Together
 
 - **Best vs. Final Accuracy**  
-  - If final accuracy is much lower than best accuracy → model benefits from early stopping.  
+  - If final accuracy ≪ best accuracy → early stopping is crucial.  
 
 - **Optimal Epochs**  
   - Early peaks → risk of overfitting.  
-  - Very late peaks → possible underfitting or unstable convergence.  
+  - Very late peaks → possible underfitting or unstable training.  
 
 - **Perfect Train Accuracy + Disconnections**  
-  - Early interpolation with stable training → sufficient capacity.  
-  - Drops in train accuracy after reaching 1.0 → disconnections / instability.  
+  - Early interpolation with stability → sufficient model capacity.  
+  - Drops after interpolation → instability.  
 
 - **MAD Value vs. MAD Gap**  
-  - Both must be analyzed together.  
-  - Low MAD (local mixing) + High MAD Gap (global separation) → desirable.  
+  - Low MAD + High MAD Gap → healthy message passing.  
   - Low MAD + Low MAD Gap → oversmoothing.  
 
----
-
-## 🚀 Quick Interpretation Guide
-
-- ✅ **High Best Test Accuracy** → Good model config.  
-- ✅ **Stable Final Accuracy ≈ Best Accuracy** → Model is reliable.  
-- ⚠️ **Large gap between Best and Final Accuracy** → Early stopping is crucial.  
-- ⚠️ **Very early interpolation (Perfect Train Accuracy)** → Risk of overfitting.  
-- ⚠️ **Drops after perfect accuracy (Disconnections)** → Instability issues.  
-- ✅ **Low MAD Value + High MAD Gap** → Healthy message passing without oversmoothing.  
+- **2D Training Curves**  
+  - Reveal training vs test stability.  
+  - Allow direct comparison of GCN vs GAT behavior.  
+  - Highlight differences in **node classification** vs **graph property prediction** tasks.  
 
 ---
 
 ## 📂 File Overview
 
-| File Name                           | Meaning                                                                 |
-|-------------------------------------|-------------------------------------------------------------------------|
-| `best_test_accuracy_heatmap.png`    | Best test accuracy during training (early stopping).                    |
-| `optimal_epochs_heatmap.png`        | Epoch at which best test accuracy occurs.                               |
-| `final_test_accuracy_heatmap.png`   | Test accuracy at final epoch (4000).                                    |
-| `perfect_train_accuracy_heatmap.png`| Epoch when model interpolates (train acc = 1.0 and stays there).        |
-| `disconnection_analysis_heatmap.png`| Average train accuracy after reaching perfect accuracy (stability check).|
-| `mad_value_final_epoch_heatmap.png` | Local oversmoothing measure (last epoch).                               |
-| `mad_gap_final_epoch_heatmap.png`   | Global oversmoothing measure (last epoch).                              |
+| File Name                                         | Meaning                                                               |
+|---------------------------------------------------|-----------------------------------------------------------------------|
+| `examples/best_test_accuracy_heatmap.png`         | Best test accuracy (early stopping).                                  |
+| `examples/optimal_epochs_heatmap.png`             | Epoch at which best test accuracy occurs.                             |
+| `examples/final_test_accuracy_heatmap.png`        | Test accuracy at final epoch (4000).                                  |
+| `examples/perfect_train_accuracy_heatmap.png`     | Epoch when model interpolates (train acc = 1.0 and stays there).      |
+| `examples/disconnection_analysis_heatmap.png`     | Average train accuracy after interpolation (stability).               |
+| `examples/mad_value_final_epoch_heatmap.png`      | Local oversmoothing measure (last epoch).                             |
+| `examples/mad_gap_final_epoch_heatmap.png`        | Global oversmoothing measure (last epoch).                            |
+| `examples/train_test_hidden_channels_X_epochs_accuracy_Y.png` | Train/test accuracy vs epochs for HC=X and layers=Y.       |
+| `examples/train_hidden_channels_X_epochs_accuracy.png`        | Training accuracy vs epochs across all layers for HC=X. |
 
 ---
 
 ## 📌 Notes
-- All heatmaps are dataset-specific (**Cora**, **GCN**, **Default** configuration).  
-- The methodology can be extended to other datasets or architectures.  
+- Experiments include both **GCN** and **GAT**.  
+- Covers **node classification** and **graph property prediction** tasks.  
+- All results shown here use **default hyperparameters** unless otherwise stated.  
+- The methodology generalizes to other datasets and architectures.  
