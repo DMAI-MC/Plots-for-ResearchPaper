@@ -111,7 +111,7 @@ This makes it possible to track how train/test accuracy evolves over 4000 epochs
   ![Train vs Test (HC=4, Layers=6)](examples/train_test_hidden_channels_4_epochs_accuracy_6.png)
 
 - **Training Accuracy across all layers**  
-  ![Train (HC=4, all layers)](examples/train_hidden_channels_4_epochs_accuracy_4.png)
+  ![Train (HC=4, all layers)](examples/train_hidden_channels_4_epochs_accuracy_6.png)
 
 ---
 
